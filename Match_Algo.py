@@ -286,11 +286,15 @@ def main(hod_rankings_path, officer_choices_path, GDFM_list_path):
     
     # Load data from Excel files.
     hod_rankings = pd.read_excel(hod_rankings_path)
-    officer_choices = pd.read_excel(officer_choices_path)
+    officer_choices = pd.read_excel(officer_choices_path, dtype={'Employee ID': str})
     posting_license_requirement = pd.read_excel(posting_license_requirement_path)
     GDFM1 = pd.read_excel(GDFM_list_path, sheet_name=0, header=1, dtype={'Employee ID': str})
     GDFM2 = pd.read_excel(GDFM_list_path, sheet_name=1, header=1, dtype={'Employee ID': str})
 
+    #Ensure employee ID data type in HOD Rankings is formatted as string
+    match_cols = [col for col in hod_rankings.columns if 'Match' in col]
+    hod_rankings[match_cols] = hod_rankings[match_cols].astype(str).replace('nan', '')
+    
     # Identify choice columns
     choice_columns = [col for col in officer_choices.columns if 'choice' in col.lower()]
 
